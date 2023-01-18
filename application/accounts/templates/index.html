@@ -1,1 +1,7 @@
-Index Page
+{% if user.is_authenticated %}
+<p style="font-size: 24px;">Welcome, {{ user.username }}</p>
+<p><a href="{% url 'logout' %}" style="font-size: 24px; text-decoration: none;">Log Out</a></p>
+{% else %}
+<p><a href="accounts/login/" style="font-size: 24px; text-decoration: none;">Login</a></p>
+<p><a href="accounts/signup/" style="font-size: 24px; text-decoration: none;">Sign Up</a></p>
+{% endif %}
