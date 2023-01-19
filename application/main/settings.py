@@ -26,7 +26,7 @@ SECRET_KEY = "empty"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "192.168.2.154"]
+ALLOWED_HOSTS = ["127.0.0.1", "192.168.2.154", "derfacn.pythonanywhere.com"]
 
 
 # Application definition
