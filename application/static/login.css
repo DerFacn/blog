@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body{
+    background-image:url('encrypted-data.gif');
+    background-size: cover;
+
+    height: 100vh;
+    padding:0;
+    margin:0;
+}
+
+
+.form-control {
+	margin-top: 120px;
+	margin-bottom: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	padding-left: 50px;
+	padding-right: 50px;
+	font-family: 'Anonymous Pro', sans-serif;
+	border-radius: 50px;
+	background: #000;
+	width: 400px;
+	height: 266px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+input[type="password"],
+input[type=text]{
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 18px;
+	margin-bottom: 16px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border: 0.8px solid #e0e0e1;
+    width: 300px;
+    height: 38px;
+    padding-left: 10px;
+}
+
+input[type="password"],
+input[type="text"]:focus {
+	color: black;
+	box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+	border: 1px solid rgba(81, 203, 238, 1);
+}
+
+.btn {
+	font-family: 'Anonymous Pro', sans-serif;
+	font-size: 18px;
+	border-radius: 22px;
+	border-color: #2a2a2a;
+	background-color: #2a2a2a;
+	border: 0.8px solid #2a2a2a;
+	width: 300px;
+    height: 44px;
+	font-weight: bolder;
+	color: white;
+	margin-bottom: 16px;
+}
+
+.btn:hover {
+	border-color: #303030;
+	background-color: #303030;
+}
+
+.btn:active {
+	border-color: black;
+	background-color: black;
+}
+
+.form-footer {
+	padding: 3px;
+	margin-left: 13px;
+}
+
+span {
+	color: grey;
+}
+
+.form-footer a {
+	color: white;
+	text-decoration: none;
+}
+
+.form-footer a:hover {
+	text-decoration: underline;
+}

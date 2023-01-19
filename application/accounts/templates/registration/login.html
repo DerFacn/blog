@@ -1,9 +1,13 @@
 {% include 'base/base.html' %}
+{% load static %}
+<link href="{% static 'login.css' %}" rel="stylesheet">
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
+<form method="post" class="form-control">
+	{% csrf_token %}
+	<input type="text" name="username" placeholder="Username" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+	<input type="password" name="password" autocomplete="current-password" placeholder="Password" required="" id="id_password"><br>
+	<button type="submit" class="btn">Sign in</button>
+	<div class="form-footer"><span>Don't have an account?</span>  <a href="#">Sign up here</a></div>
 </form>
 {% endblock %}
