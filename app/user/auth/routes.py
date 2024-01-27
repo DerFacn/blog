@@ -21,7 +21,7 @@ def signup():
             except IntegrityError:
                 flash('User already exists!')
                 return render_template('auth/signup.html', form=form)
-            response = make_response(redirect(url_for('index')))
+            response = make_response(redirect(url_for('general.index')))
             access_token = create_token(identity)
             response.set_cookie('access_token', access_token, path='/')
             return response
@@ -42,12 +42,12 @@ def login():
                 flash('Wrong password!')
                 return render_template('auth/login.html', form=form)
             access_token = create_token(user.uuid)
-            response = make_response(redirect(url_for('index')))
+            response = make_response(redirect(url_for('general.index')))
             response.set_cookie('access_token', access_token, path='/')
     return render_template('auth/login.html', form=form)
 
 
 def logout():
-    response = make_response(redirect(url_for('index')))
+    response = make_response(redirect(url_for('general.index')))
     response.set_cookie('access_token', '', expires=0)
     return response

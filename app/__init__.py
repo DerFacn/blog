@@ -6,11 +6,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 
-@app.route('/')
-def index():
-    return 'Hello, World'
-
-
 from app.db import session
 
 
@@ -19,5 +14,6 @@ def shutdown_session(e=None):
     session.remove()
 
 
-from app.user import user
-app.register_blueprint(user)
+from app import user, general
+app.register_blueprint(general.general)
+app.register_blueprint(user.user)
