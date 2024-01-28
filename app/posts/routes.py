@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, abort
 from .forms import PostForm
 from app.models import Post
 from app.db import session
@@ -15,12 +15,12 @@ def create_post(user):
             new_post = Post(title=title, body=body, user_uuid=user.uuid)
             session.add(new_post)
             session.commit()
-            return f'<h1>{title}</h1><p>{body}</p>'
-    return render_template('posts/create.html', form=form)
+            return redirect(url_for('posts.view_post', post_id=new_post.id))
+    return render_template('posts/create.html', title='Creating', form=form)
 
 
 def view_post(post_id):
     post = session.query(Post).filter_by(id=post_id).first()
     if not post:
-        return '<h1 style="text-align: center">404 NOT FOUND</h1>'
-    return render_template('posts/post.html', post=post)
+        abort(404)
+    return render_template('posts/post.html', title=f'{post.title}', post=post)

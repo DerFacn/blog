@@ -1,4 +1,4 @@
-from flask import request, render_template, flash, make_response, redirect, url_for
+from flask import request, render_template, flash, make_response, redirect, url_for, g
 from .utils import generate_hash, check_hash, create_token
 from .forms import AuthForm
 from app.models import User
@@ -8,61 +8,65 @@ from uuid import uuid4
 
 
 def signup():
+    if g.user:
+        return redirect('/')
+
     form = AuthForm()
-    if request.method == 'GET':
-        return render_template('auth/signup.html', form=form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
 
-    if form.validate_on_submit():
+            username = request.form.get('username', None)
+            password = request.form.get('password', None)
+            identity = str(uuid4())
 
-        username = request.form.get('username', None)
-        password = request.form.get('password', None)
-        identity = str(uuid4())
+            new_user = User(uuid=identity, username=username, password=generate_hash(password))
 
-        new_user = User(uuid=identity, username=username, password=generate_hash(password))
+            try:
+                session.add(new_user)
+                session.commit()
+            except IntegrityError:
+                flash('User already exists!')
+                return render_template('auth/signup.html', form=form)
 
-        try:
-            session.add(new_user)
-            session.commit()
-        except IntegrityError:
-            flash('User already exists!')
-            return render_template('auth/signup.html', form=form)
+            response = make_response(redirect(url_for('general.index')))
+            access_token = create_token(identity)
+            response.set_cookie('access_token', access_token, path='/')
 
-        response = make_response(redirect(url_for('general.index')))
-        access_token = create_token(identity)
-        response.set_cookie('access_token', access_token, path='/')
-
-        return response
+            return response
+    return render_template('auth/signup.html', title='Signup', form=form)
 
 
 def login():
+    if g.user:
+        return redirect('/')
+
     form = AuthForm()
-    if request.method == 'GET':
-        return render_template('auth/login.html', form=form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
 
-    if form.validate_on_submit():
+            username = request.form.get('username', None)
+            password = request.form.get('password', None)
 
-        username = request.form.get('username', None)
-        password = request.form.get('password', None)
+            user = session.query(User).filter_by(username=username).first()
 
-        user = session.query(User).filter_by(username=username).first()
+            if not user:
+                flash('No user found with this username')
+                return
+            elif not check_hash(password, user.password):
+                flash('Wrong password!')
+                return render_template('auth/login.html', form=form)
 
-        if not user:
-            flash('No user found with this username')
-            return
-        elif not check_hash(password, user.password):
-            flash('Wrong password!')
-            return render_template('auth/login.html', form=form)
+            url = request.args.get('after', None)
+            if url:
+                response = make_response(redirect(url))
+            else:
+                response = make_response(redirect(url_for('general.index')))
 
-        url = request.args.get('after', None)
-        if url:
-            response = make_response(redirect(url))
-        else:
-            response = make_response(redirect(url_for('general.index')))
+            access_token = create_token(user.uuid)
+            response.set_cookie('access_token', access_token, path='/')
 
-        access_token = create_token(user.uuid)
-        response.set_cookie('access_token', access_token, path='/')
-
-        return response
+            return response
+    return render_template('auth/login.html', title='Login', form=form)
 
 
 def logout():

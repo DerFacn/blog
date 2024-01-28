@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
-    {% if user %}
-    {{ user.username }}|<form method="post" action="{{ url_for('user.auth.logout') }}"><button>Logout</button></form>
-    {% else %}
-    <a href="{{ url_for('user.auth.signup') }}">Signup</a> / <a href="{{ url_for('user.auth.login') }}">Login</a>
-    {% endif %}
-    <hr>
-</div>
+    <section class="section">
+        <div class="container">
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="box">
+                        <h1 class="title">{{ post.title }}</h1>
+                        <p class="content">{{ post.body }}</p>
+                        <div class="is-size-7 has-text-grey">Creator: {{ post.user.username }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="has-text-centered has-text-grey">No posts available.</p>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}

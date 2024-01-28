@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='/icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='/icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='/icons/favicon-16x16.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% if title %}
     <title>{{ title }} | Kiwi</title>
@@ -12,7 +19,44 @@
     {% endif %}
 </head>
 <body>
-{% block content %}
-{% endblock %}
+    <div class="container">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item is-size-3" href="/">
+                    <h2>🥝 Kiwi</h2>
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        {% if not g.user %}
+
+                                <a class="button is-primary" href="{{ url_for('user.auth.signup') }}">
+                                    <strong>Sign up</strong>
+                                </a>
+                                <a class="button is-light" href="{{ url_for('user.auth.login') }}">
+                                    Log in
+                                </a>
+                            
+                        {% else %}
+                                <a class="button is-light is-success" href="{{ url_for('posts.create_post') }}">New post</a>
+                                <a class="button is-link is-light">
+                                    <strong>{{ g.user.username }}</strong>
+                                </a>
+                            <form method="post" action="{{ url_for('user.auth.logout') }}" class="navbar-item" style="padding: 0">
+                                <button class="button">
+                                    Logout
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>

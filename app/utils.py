@@ -2,9 +2,9 @@ from functools import wraps
 from flask import request, redirect, url_for, flash
 import jwt
 from jwt.exceptions import ExpiredSignatureError
-from app import app
 from app.models import User
 from app.db import session
+from app import app
 
 
 def get_user(func):

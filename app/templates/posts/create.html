@@ -2,16 +2,44 @@
 
 {% block content %}
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+            {% if messages %}
+                <div id="flash-notification" class="notification is-warning">
+                    <button class="delete" onclick="closeNotification()"></button>
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 <form method="post">
     {{ form.csrf_token }}
-    {{ form.title.label }}:{{ form.title(size=120) }}<br><br>
-    {{ form.body.label }}:{{ form.body }}<br><br>
-    <button>Post</button>
+    
+    <div class="field">
+        <label class="label">{{ form.title.label }}</label>
+        <div class="control">
+            {{ form.title(size=120, class="input") }}
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">{{ form.body.label }}</label>
+        <div class="control">
+            {{ form.body(class="textarea", spellcheck='false') }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-primary">Post</button>
+        </div>
+    </div>
 </form>
+<script>
+    function closeNotification() {
+        var flashNotification = document.getElementById('flash-notification');
+        if (flashNotification) {
+            flashNotification.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}
