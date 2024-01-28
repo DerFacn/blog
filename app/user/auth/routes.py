@@ -9,42 +9,60 @@ from uuid import uuid4
 
 def signup():
     form = AuthForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            username = request.form.get('username', None)
-            password = request.form.get('password', None)
-            identity = str(uuid4())
-            new_user = User(uuid=identity, username=username, password=generate_hash(password))
-            try:
-                session.add(new_user)
-                session.commit()
-            except IntegrityError:
-                flash('User already exists!')
-                return render_template('auth/signup.html', form=form)
-            response = make_response(redirect(url_for('general.index')))
-            access_token = create_token(identity)
-            response.set_cookie('access_token', access_token, path='/')
-            return response
-    return render_template('auth/signup.html', form=form)
+    if request.method == 'GET':
+        return render_template('auth/signup.html', form=form)
+
+    if form.validate_on_submit():
+
+        username = request.form.get('username', None)
+        password = request.form.get('password', None)
+        identity = str(uuid4())
+
+        new_user = User(uuid=identity, username=username, password=generate_hash(password))
+
+        try:
+            session.add(new_user)
+            session.commit()
+        except IntegrityError:
+            flash('User already exists!')
+            return render_template('auth/signup.html', form=form)
+
+        response = make_response(redirect(url_for('general.index')))
+        access_token = create_token(identity)
+        response.set_cookie('access_token', access_token, path='/')
+
+        return response
 
 
 def login():
     form = AuthForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            username = request.form.get('username', None)
-            password = request.form.get('password', None)
-            user = session.query(User).filter_by(username=username).first()
-            if not user:
-                flash('No user found with this username')
-                return
-            elif not check_hash(password, user.password):
-                flash('Wrong password!')
-                return render_template('auth/login.html', form=form)
-            access_token = create_token(user.uuid)
+    if request.method == 'GET':
+        return render_template('auth/login.html', form=form)
+
+    if form.validate_on_submit():
+
+        username = request.form.get('username', None)
+        password = request.form.get('password', None)
+
+        user = session.query(User).filter_by(username=username).first()
+
+        if not user:
+            flash('No user found with this username')
+            return
+        elif not check_hash(password, user.password):
+            flash('Wrong password!')
+            return render_template('auth/login.html', form=form)
+
+        url = request.args.get('after', None)
+        if url:
+            response = make_response(redirect(url))
+        else:
             response = make_response(redirect(url_for('general.index')))
-            response.set_cookie('access_token', access_token, path='/')
-    return render_template('auth/login.html', form=form)
+
+        access_token = create_token(user.uuid)
+        response.set_cookie('access_token', access_token, path='/')
+
+        return response
 
 
 def logout():

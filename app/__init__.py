@@ -14,6 +14,7 @@ def shutdown_session(e=None):
     session.remove()
 
 
-from app import user, general
-app.register_blueprint(general.general)
-app.register_blueprint(user.user)
+from app import user, general, posts
+app.register_blueprint(general.bp)
+app.register_blueprint(user.bp)
+app.register_blueprint(posts.bp)

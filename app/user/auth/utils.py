@@ -1,6 +1,7 @@
 from bcrypt import gensalt, hashpw, checkpw
 from datetime import datetime, timedelta
 import jwt
+from app import app
 
 
 # Passwords
@@ -14,9 +15,6 @@ def generate_hash(password: str) -> bytes:
 def check_hash(password: str, password_hash: bytes) -> bool:
     password_bytes = password.encode('utf-8')
     return checkpw(password_bytes, password_hash)
-
-
-from app import app
 
 
 # Cookie token
