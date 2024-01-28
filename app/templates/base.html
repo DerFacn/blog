@@ -41,7 +41,7 @@
                             
                         {% else %}
                                 <a class="button is-light is-success" href="{{ url_for('posts.create_post') }}">New post</a>
-                                <a class="button is-link is-light">
+                                <a class="button is-link is-light" href="{{ url_for('general.me') }}">
                                     <strong>{{ g.user.username }}</strong>
                                 </a>
                             <form method="post" action="{{ url_for('user.auth.logout') }}" class="navbar-item" style="padding: 0">
