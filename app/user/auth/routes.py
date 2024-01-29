@@ -5,6 +5,7 @@ from app.models import User
 from app.db import session
 from sqlalchemy.exc import IntegrityError
 from uuid import uuid4
+from .verification import send_message, verify
 
 
 def signup():
@@ -17,9 +18,10 @@ def signup():
 
             username = request.form.get('username', None)
             password = request.form.get('password', None)
+            email = request.form.get('email')
             identity = str(uuid4())
 
-            new_user = User(uuid=identity, username=username, password=generate_hash(password))
+            new_user = User(uuid=identity, username=username, email=email, password=generate_hash(password))
 
             try:
                 session.add(new_user)
@@ -31,7 +33,9 @@ def signup():
             response = make_response(redirect(url_for('general.index')))
             access_token = create_token(identity)
             response.set_cookie('access_token', access_token, path='/')
-
+            if not send_message(email, identity):
+                return 'Something wrong! Try again later!'
+            flash('Your account confirmation email has been sent to your email!')
             return response
     return render_template('auth/signup.html', title='Signup', form=form)
 
@@ -67,6 +71,15 @@ def login():
 
             return response
     return render_template('auth/login.html', title='Login', form=form)
+
+
+def verification(token):
+    if verify(token):
+        flash('Your email address has been successfully verified! Now you have all the features of our site, enjoy!')
+        return redirect(url_for('general.index'))
+    else:
+        'Verification token expired! Signup again!'
+        #  In the future, I will add support for deleting unverified accounts through redis
 
 
 def logout():

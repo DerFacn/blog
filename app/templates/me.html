@@ -9,6 +9,15 @@
                     <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt="example">
                 </figure>
                 <strong class="title">{{ user.username }}</strong>
+                <p class="is-size-4">
+                    Email:
+                    {% if user.is_active %}
+                    <span class="has-text-success">verified!</span>
+                    {% else %}
+                    <span class="has-text-danger">not verified!</span>
+                    {% endif %}
+                </p>
+                <p class="is-size-4">Created at: {{ user.created.strftime('%Y-%m-%d') }}</p>
                 <!-- <button class="button is-small" onclick="openForm()">Edit profile</button> -->
             </div>
             <div class="column is-four-fifths">

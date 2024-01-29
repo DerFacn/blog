@@ -1,6 +1,7 @@
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
-from sqlalchemy import String, LargeBinary, ForeignKey
+from sqlalchemy import String, LargeBinary, DateTime, ForeignKey
 from typing import List
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -9,8 +10,11 @@ class User(Base):
     __tablename__ = 'users'
     uuid: Mapped[str] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(25), index=True, unique=True)
+    email: Mapped[str] = mapped_column(String(200), unique=True)
     password: Mapped[str] = mapped_column(LargeBinary())
     posts: Mapped[List['Post']] = relationship(back_populates='user', cascade='all, delete-orphan')
+    is_active: Mapped[bool] = mapped_column(default=False)
+    created: Mapped[str] = mapped_column(DateTime(), default=datetime.now())
 
 
 class Post(Base):
@@ -20,3 +24,4 @@ class Post(Base):
     body: Mapped[str]
     user_uuid: Mapped[str] = mapped_column(ForeignKey('users.uuid'))
     user: Mapped['User'] = relationship(back_populates='posts')
+    created_at: Mapped[str] = mapped_column(DateTime(), default=datetime.now())

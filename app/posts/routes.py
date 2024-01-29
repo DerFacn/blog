@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, url_for, abort
+from flask import request, render_template, redirect, url_for, abort, flash
 from .forms import PostForm
 from app.models import Post
 from app.db import session
@@ -7,6 +7,10 @@ from app.utils import login_required
 
 @login_required
 def create_post(user):
+    if not user.is_active:
+        flash('Verify your account for writing posts!')
+        return redirect(url_for('general.index'))
+
     form = PostForm()
     if request.method == 'POST':
         if form.validate_on_submit():

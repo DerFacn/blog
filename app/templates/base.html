@@ -54,9 +54,29 @@
                 </div>
             </div>
         </nav>
-        
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="flash-notification" class="notification is-info is-light">
+                    <button class="delete" onclick="closeNotification()"></button>
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         {% block content %}
         {% endblock %}
+
+        <script>
+        function closeNotification() {
+            var flashNotification = document.getElementById('flash-notification');
+            if (flashNotification) {
+                flashNotification.style.display = 'none';
+            }
+        }
+        </script>
     </div>
 </body>
 </html>
