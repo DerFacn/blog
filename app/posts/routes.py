@@ -23,6 +23,14 @@ def create_post(user):
     return render_template('posts/create.html', title='Creating', form=form)
 
 
+@login_required
+def delete_post(user, post_id):
+    post = session.query(Post).filter_by(id=int(post_id)).first()
+    session.delete(post)
+    session.commit()
+    return redirect(url_for('general.me'))
+
+
 def view_post(post_id):
     post = session.query(Post).filter_by(id=post_id).first()
     if not post:
