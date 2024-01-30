@@ -1,6 +1,6 @@
 from flask import request, render_template, flash, make_response, redirect, url_for, g
 from .utils import generate_hash, check_hash, create_token
-from .forms import AuthForm
+from .forms import SignupForm, LoginForm
 from app.models import User
 from app.db import session
 from sqlalchemy.exc import IntegrityError
@@ -12,7 +12,7 @@ def signup():
     if g.user:
         return redirect('/')
 
-    form = AuthForm()
+    form = SignupForm()
     if request.method == 'POST':
         if form.validate_on_submit():
 
@@ -44,7 +44,7 @@ def login():
     if g.user:
         return redirect('/')
 
-    form = AuthForm()
+    form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
 
