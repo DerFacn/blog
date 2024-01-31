@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-one-quarter is-flex is-flex-direction-column">
+                <figure class="image is-128x128 mb-2">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt="example">
+                </figure>
+                <strong class="title">{{ user.username }}</strong>
+                <p class="is-size-5">Created at: {{ user.created.strftime('%Y-%m-%d') }}</p>
+            </div>
+            <div class="column is-four-fifths">
+                <h1 class="title is-size-3">{{ user.username }}'s posts</h1>
+                {% set posts = user.posts %}
+                {% if posts %}
+                    {% for post in user.posts %}
+                        <div class="box">
+                            <h1 class="title">{{ post.title }}</h1>
+                            <p class="content">
+                                {% set max_words = 90 %}
+                            {% set words = post.body.split(' ') %}
+                            {% set truncated_body = ' '.join(words[:max_words]) %}
+                            {{ truncated_body }}
+                            {% if words|length > max_words %}
+                                ...<br><br><a class="button is-link is-light" href="{{ url_for('posts.view_post', post_id=post.id) }}">View the full post </a>
+                            {% endif %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                <h1 class="title is-size-5 has-text-grey is-unselectable">{{ user.username }} hasn't written anything yet</h1>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
