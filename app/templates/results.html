@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-half">
+        <form action="{{ url_for('general.search') }}" method="get" id="filterForm">
+            <input type="hidden" name='q' id="q" value="{{ request.args.get('q', '') }}">
+            <div class="field has-addons">
+                <div class="control">
+                    <button class="button is-static">Filters</button>
+                </div>
+                <div class="control">
+                    <div class="select">
+                        <select name="filters" onchange="document.getElementById('q').value = document.getElementById('s').value; document.getElementById('filterForm').submit();">
+                            <option value="post" {% if request.args.get('filters') == 'post' %}selected{% endif %}>Posts</option>
+                            <option value="user" {% if request.args.get('filters') == 'user' %}selected{% endif %}>Users</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="mt-4">
+            {% if not request.args.get('filters') or request.args.get('filters') == 'post' %}
+                {% for post in results %}
+                    <div class="box">
+                        <h2 class="title"><a href="{{ url_for('posts.view_post', post_id=post.id) }}">{{ post.title }}</a></h2>
+                        <p class="content">{{ post.body }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                {% for user in results %}
+                    <div class="box">
+                        <h2 class="title"><a href="{{ url_for('user.user_profile', username=user.username) }}" class="has-text-link">{{ user.username }}</a></h2>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -3,17 +3,6 @@
 {% block content %}
 <div class="columns is-centered">
     <div class="column is-half">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="flash-notification" class="notification is-warning">
-                    <button class="delete" onclick="closeNotification()"></button>
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
         <form method="post">
             {{ form.csrf_token }}
             <div class="field">

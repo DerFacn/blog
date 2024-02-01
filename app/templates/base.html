@@ -26,7 +26,14 @@
                     <h2>🥝 Kiwi</h2>
                 </a>
             </div>
-
+            <div class="navbar-item">
+                <div class="control">
+                    <form action="/search" style="padding: 0">
+                        <input type="hidden" name="filters" value="{{ request.args.get('filters', '') }}">
+                        <input type="text" name="q" id="s" class="input" placeholder="search" value="{{ request.args.get('q', '') }}">
+                    </form>
+                </div>
+            </div>
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
