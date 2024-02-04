@@ -6,7 +6,10 @@ from app.db import session
 
 
 def is_admin():
-    return g.user.is_admin
+    if g.user:
+        return g.user.is_admin
+    else:
+        return False
 
 
 def get_user_uuid():

@@ -5,6 +5,7 @@ from app.models import User
 from app.db import session
 from sqlalchemy.exc import IntegrityError
 from .verification import send_message, verify
+from app.utils import login_required
 
 
 def signup():
@@ -76,8 +77,18 @@ def verification(token):
         flash('Your email address has been successfully verified! Now you have all the features of our site, enjoy!')
         return redirect(url_for('general.index'))
     else:
-        'Verification token expired! Signup again!'
+        flash('Your verification token is expired! Write')
+        return redirect(url_for('general.index'))
         #  In the future, I will add support for deleting unverified accounts through redis
+
+
+@login_required
+def resend_email_verification(user):
+    email = request.form.get('email')
+    user.email = email
+    send_message(email, user.uuid)
+    flash('Your new email confirmation link has been send to your email!')
+    return redirect(url_for('general.index'))
 
 
 def logout():

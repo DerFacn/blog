@@ -2,11 +2,13 @@ from flask import Flask, g
 from app.config import Config
 from flask_mail import Mail
 from flask_admin import Admin
+from flask_babel import Babel
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
 mail = Mail(app)
+babel = Babel(app)
 
 
 from app.db import session

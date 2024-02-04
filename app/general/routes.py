@@ -5,8 +5,7 @@ from app.models import Post, User
 
 def index():
     all_posts = session.query(Post).order_by(Post.id.desc()).limit(20)
-    posts = all_posts[::-1]
-    return render_template('index.html', posts=posts)
+    return render_template('index.html', posts=all_posts)
 
 
 def search():
