@@ -4,7 +4,6 @@ from .forms import SignupForm, LoginForm
 from app.models import User
 from app.db import session
 from sqlalchemy.exc import IntegrityError
-from uuid import uuid4
 from .verification import send_message, verify
 
 
@@ -19,9 +18,8 @@ def signup():
             username = request.form.get('username', None)
             password = request.form.get('password', None)
             email = request.form.get('email')
-            identity = str(uuid4())
 
-            new_user = User(uuid=identity, username=username, email=email, password=generate_hash(password))
+            new_user = User(username=username, email=email, password=generate_hash(password))
 
             try:
                 session.add(new_user)
@@ -31,9 +29,9 @@ def signup():
                 return render_template('auth/signup.html', form=form)
 
             response = make_response(redirect(url_for('general.index')))
-            access_token = create_token(identity)
+            access_token = create_token(new_user.uuid)
             response.set_cookie('access_token', access_token, path='/')
-            if not send_message(email, identity):
+            if not send_message(email, new_user.uuid):
                 return 'Something wrong! Try again later!'
             flash('Your account confirmation email has been sent to your email!')
             return response
@@ -55,7 +53,7 @@ def login():
 
             if not user:
                 flash('No user found with this username')
-                return
+                return render_template('auth/login.html', form=form)
             elif not check_hash(password, user.password):
                 flash('Wrong password!')
                 return render_template('auth/login.html', form=form)

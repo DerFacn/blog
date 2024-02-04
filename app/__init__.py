@@ -1,6 +1,7 @@
 from flask import Flask, g
 from app.config import Config
 from flask_mail import Mail
+from flask_admin import Admin
 
 
 app = Flask(__name__)
@@ -9,6 +10,11 @@ mail = Mail(app)
 
 
 from app.db import session
+from app.admin_panel import CustomAdminIndexView, user_view, post_view
+
+admin = Admin(app, name='Blog', template_mode='bootstrap3', index_view=CustomAdminIndexView(endpoint='/admin_panel'))
+admin.add_view(user_view)
+admin.add_view(post_view)
 
 
 @app.teardown_appcontext
@@ -32,3 +38,7 @@ from app import user, general, posts
 app.register_blueprint(general.bp)
 app.register_blueprint(user.bp)
 app.register_blueprint(posts.bp)
+
+
+from app.commands import create_admin_command
+app.cli.add_command(create_admin_command)
