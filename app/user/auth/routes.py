@@ -3,7 +3,6 @@ from .utils import generate_hash, check_hash, create_token
 from .forms import SignupForm, LoginForm
 from app.models import User
 from app.db import session
-from sqlalchemy.exc import IntegrityError
 from .verification import send_message, verify
 from app.utils import login_required
 
@@ -19,22 +18,34 @@ def signup():
             username = request.form.get('username', None)
             password = request.form.get('password', None)
             email = request.form.get('email')
+            error = False
+
+            username_check = session.query(User).filter_by(username=username).first()
+            if username_check:
+                error = True
+                flash('User with this username already exists!')
+
+            email_check = session.query(User).filter_by(email=email).first()
+            if email_check:
+                error = True
+                flash('User with this email already exists!')
+
+            if error:
+                return render_template('auth/signup.html', form=form)
 
             new_user = User(username=username, email=email, password=generate_hash(password))
 
-            try:
-                session.add(new_user)
-                session.commit()
-            except IntegrityError:
-                flash('User already exists!')
-                return render_template('auth/signup.html', form=form)
+            session.add(new_user)
+            session.commit()
 
             response = make_response(redirect(url_for('general.index')))
             access_token = create_token(new_user.uuid)
             response.set_cookie('access_token', access_token, path='/')
+
             if not send_message(email, new_user.uuid):
-                return 'Something wrong! Try again later!'
+                return '<h1">Something wrong! Please, write about this problem to admin!</h1>'
             flash('Your account confirmation email has been sent to your email!')
+
             return response
     return render_template('auth/signup.html', title='Signup', form=form)
 
