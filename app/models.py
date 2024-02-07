@@ -9,7 +9,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
-    uuid: Mapped[str] = mapped_column(primary_key=True, default=str(uuid4()))
+    uuid: Mapped[str] = mapped_column(primary_key=True, default=str(uuid4))
     username: Mapped[str] = mapped_column(String(25), index=True, unique=True)
     email: Mapped[str] = mapped_column(String(200), unique=True)
     password: Mapped[str]

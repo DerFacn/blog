@@ -18,7 +18,9 @@
                     {% endif %}
                 </p>
                 <p class="is-size-5">Created at: {{ user.created.strftime('%Y-%m-%d') }}</p>
-                <!-- <button class="button is-small" onclick="openForm()">Edit profile</button> -->
+                {% if user.is_admin %}
+                <p><a href="{{ url_for('/admin_panel.index') }}" class="button is-link is-light">Admin panel</a></p>
+                {% endif %}
             </div>
             <div class="column is-four-fifths">
                 <h1 class="title is-size-3">My posts</h1>
