@@ -4,22 +4,8 @@
     <section class="section">
         <div class="container">
             {% if posts %}
-                {% for post in posts %}
-                    <div class="box">
-                        <h1 class="title">{{ post.title }}</h1>
-                        <div class="content">
-                            {% set max_words = 90 %}
-                            {% set words = post.body.split(' ') %}
-                            {% set truncated_body = ' '.join(words[:max_words]) %}
-                            {{ truncated_body }}
-                            {% if words|length > max_words %}
-                                ...<br><br><a class="button is-link is-light" href="{{ url_for('posts.view_post', post_id=post.id) }}">View the full post </a>
-                            {% endif %}
-                        </div>
-                        <div class="is-size-7 has-text-grey">Creator: <a href="{{ url_for('user.user_profile', username=post.user.username) }}">{{ post.user.username }}</a></div>
-                        <div class="is-size-7 has-text-grey">Created at: {{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
-                    </div>
-                {% endfor %}
+                {% from 'components/post.html' import render_posts %}
+                {{ render_posts(posts) }}
             {% else %}
                 <p class="has-text-centered has-text-grey">No posts available.</p>
             {% endif %}

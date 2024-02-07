@@ -4,7 +4,7 @@ from app.models import Post, User
 
 
 def index():
-    all_posts = session.query(Post).order_by(Post.id.desc()).limit(20)
+    all_posts = session.query(Post).order_by(Post.id.desc()).limit(20).all()
     return render_template('index.html', posts=all_posts)
 
 

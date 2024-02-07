@@ -36,8 +36,8 @@ def before_request(user):
 from app.errors import app
 
 
-from app import user, general, posts
-app.register_blueprint(general.bp)
+from app import user, main, posts
+app.register_blueprint(main.bp)
 app.register_blueprint(user.bp)
 app.register_blueprint(posts.bp)
 

@@ -38,7 +38,7 @@ def signup():
             session.add(new_user)
             session.commit()
 
-            response = make_response(redirect(url_for('general.index')))
+            response = make_response(redirect(url_for('main.index')))
             access_token = create_token(new_user.uuid)
             response.set_cookie('access_token', access_token, path='/')
 
@@ -74,7 +74,7 @@ def login():
             if url:
                 response = make_response(redirect(url))
             else:
-                response = make_response(redirect(url_for('general.index')))
+                response = make_response(redirect(url_for('main.index')))
 
             access_token = create_token(user.uuid)
             response.set_cookie('access_token', access_token, path='/')
@@ -86,10 +86,10 @@ def login():
 def verification(token):
     if verify(token):
         flash('Your email address has been successfully verified! Now you have all the features of our site, enjoy!')
-        return redirect(url_for('general.index'))
+        return redirect(url_for('main.index'))
     else:
         flash('Your verification token is expired! Write')
-        return redirect(url_for('general.index'))
+        return redirect(url_for('main.index'))
         #  In the future, I will add support for deleting unverified accounts through redis
 
 
@@ -99,10 +99,10 @@ def resend_email_verification(user):
     user.email = email
     send_message(email, user.uuid)
     flash('Your new email confirmation link has been send to your email!')
-    return redirect(url_for('general.index'))
+    return redirect(url_for('main.index'))
 
 
 def logout():
-    response = make_response(redirect(url_for('general.index')))
+    response = make_response(redirect(url_for('main.index')))
     response.set_cookie('access_token', '', expires=0)
     return response

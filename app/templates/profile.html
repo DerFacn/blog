@@ -15,20 +15,8 @@
                 <h1 class="title is-size-3">{{ user.username }}'s posts</h1>
                 {% set posts = user.posts %}
                 {% if posts %}
-                    {% for post in user.posts %}
-                        <div class="box">
-                            <h1 class="title">{{ post.title }}</h1>
-                            <p class="content">
-                                {% set max_words = 90 %}
-                            {% set words = post.body.split(' ') %}
-                            {% set truncated_body = ' '.join(words[:max_words]) %}
-                            {{ truncated_body }}
-                            {% if words|length > max_words %}
-                                ...<br><br><a class="button is-link is-light" href="{{ url_for('posts.view_post', post_id=post.id) }}">View the full post </a>
-                            {% endif %}
-                            </p>
-                        </div>
-                    {% endfor %}
+                    {% from 'components/post.html' import render_posts %}
+                    {{ render_posts(posts) }}
                 {% else %}
                 <h1 class="title is-size-5 has-text-grey is-unselectable">{{ user.username }} hasn't written anything yet</h1>
                 {% endif %}

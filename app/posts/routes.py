@@ -9,7 +9,7 @@ from app.utils import login_required
 def create_post(user):
     if not user.is_active:
         flash('Verify your account for writing posts!')
-        return redirect(url_for('general.index'))
+        return redirect(url_for('main.index'))
 
     form = PostForm()
     if request.method == 'POST':
