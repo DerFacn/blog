@@ -25,8 +25,33 @@
             <div class="column is-four-fifths">
                 <h1 class="title is-size-3">My posts</h1>
                 {% if posts %}
-                    {% from 'components/post.html' import render_posts %}
-                    {{ render_posts(posts) }}
+                    {% for post in posts %}
+                        <div class="box">
+                            <h1 class="title"><a href="{{ url_for('posts.view_post', post_id=post.id) }}">{{ post.title }}</a></h1>
+                            <div class="content">
+                                {% set max_words = 90 %}
+                                {% set words = post.body.split(' ') %}
+                                {% set truncated_body = ' '.join(words[:max_words]) %}
+                                {{ (truncated_body).replace('\n', '<br>')|safe }}
+                                {% if words|length > max_words %}
+                                    ...<br><br><a class="button is-link is-light" href="{{ url_for('posts.view_post', post_id=post.id) }}">View the full post </a>
+                                {% endif %}
+                            </div>
+                            <span class="is-unselectable">
+                                <span class="icon is-small like-icon" data-post-id="{{ post.id }}" onclick="likePost(this)" style="cursor: pointer">
+                                    <i class="far fa-thumbs-up" aria-hidden="true"></i>
+                                </span>
+                                <span id="likesCount_{{ post.id }}">{{ post.likes_count }}</span>
+                            </span><br><br>
+                            <a href="{{ url_for('posts.edit_post', post_id=post.id) }}" class="button is-link is-light">Edit</a>
+                            <button class="button is-danger is-light" onclick="confirmDelete('{{ post.id }}')">Delete</button>
+                            <br><br>
+                            <div class="is-size-7 has-text-grey">Creator: <a href="{{ url_for('user.user_profile', username=post.user.username) }}">{{ post.user.username }}</a></div>
+                            <div class="is-size-7 has-text-grey">Created at: {{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+                        </div>
+                    {% endfor %}
+
+
                 {% else %}
                 <h1 class="title is-size-5 has-text-grey is-unselectable">I haven't written anything yet, but I can always start</h1>
                 {% endif %}
@@ -69,4 +94,19 @@
         emailStatus.appendChild(form);
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function likePost(likeIcon) {
+            var postId = likeIcon.dataset.postId;
+            var likesCountElement = document.getElementById('likesCount_' + postId);
+
+            axios.post('{{ url_for("posts.like_post") }}', { post_id: postId })
+                .then(function (response) {
+                    likesCountElement.innerHTML = response.data.likes;
+                })
+                .catch(function (error) {
+                    console.error('Помилка при відправці запиту на лайк: ', error);
+                });
+        }
+    </script>
 {% endblock %}

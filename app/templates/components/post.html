@@ -11,8 +11,30 @@
                     ...<br><br><a class="button is-link is-light" href="{{ url_for('posts.view_post', post_id=post.id) }}">View the full post </a>
                 {% endif %}
             </div>
+            <span class="is-unselectable">
+                <span class="icon is-small like-icon" data-post-id="{{ post.id }}" onclick="likePost(this)" style="cursor: pointer">
+                    <i class="far fa-thumbs-up" aria-hidden="true"></i>
+                </span>
+                <span id="likesCount_{{ post.id }}">{{ post.likes_count }}</span>
+            </span>
             <div class="is-size-7 has-text-grey">Creator: <a href="{{ url_for('user.user_profile', username=post.user.username) }}">{{ post.user.username }}</a></div>
             <div class="is-size-7 has-text-grey">Created at: {{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
         </div>
     {% endfor %}
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function likePost(likeIcon) {
+            var postId = likeIcon.dataset.postId;
+            var likesCountElement = document.getElementById('likesCount_' + postId);
+
+            axios.post('{{ url_for("posts.like_post") }}', { post_id: postId })
+                .then(function (response) {
+                    likesCountElement.innerHTML = response.data.likes;
+                })
+                .catch(function (error) {
+                    console.error('Помилка при відправці запиту на лайк: ', error);
+                });
+        }
+    </script>
 {% endmacro %}

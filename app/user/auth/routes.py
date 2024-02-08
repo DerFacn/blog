@@ -5,6 +5,7 @@ from app.models import User
 from app.db import session
 from .verification import send_message, verify
 from app.utils import login_required
+from uuid import uuid4
 
 
 def signup():
@@ -33,7 +34,8 @@ def signup():
             if error:
                 return render_template('auth/signup.html', form=form)
 
-            new_user = User(username=username, email=email, password=generate_hash(password))
+            identity = str(uuid4())
+            new_user = User(uuid=identity, username=username, email=email, password=generate_hash(password))
 
             session.add(new_user)
             session.commit()

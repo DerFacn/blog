@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from app.user.auth.utils import generate_hash
 from app.db import session
 from app.models import User
+from uuid import uuid4
 
 
 @click.command('create-admin', help='Create admin user')
@@ -12,7 +13,9 @@ from app.models import User
 @click.password_option()
 @with_appcontext
 def create_admin_command(username, email, password):
-    new_user = User(username=username, password=generate_hash(password), email=email, is_active=1, is_admin=1)
+    identity = str(uuid4())
+    new_user = User(uuid=identity, username=username, password=generate_hash(password), email=email,
+                    is_active=1, is_admin=1)
     try:
         session.add(new_user)
         session.commit()

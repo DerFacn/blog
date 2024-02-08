@@ -1,6 +1,6 @@
-from flask import request, render_template, redirect, url_for, abort, flash
+from flask import request, render_template, redirect, url_for, abort, flash, jsonify
 from .forms import PostForm
-from app.models import Post
+from app.models import Post, Like
 from app.db import session
 from app.utils import login_required
 
@@ -42,10 +42,31 @@ def edit_post(user, post_id):
     return render_template('posts/create.html', title='Edit post', form=form)
 
 
+@login_required
+def like_post(user):
+    post_id = request.json.get('post_id', None)
+    if post_id:
+        post = session.query(Post).filter_by(id=post_id).first()
+        if post:
+            like = session.query(Like).filter(Like.user_uuid == user.uuid, Like.post_id == post_id).first()
+            if not like:
+                new_like = Like(user_uuid=user.uuid, post_id=post_id)
+                post.likes_count += 1
+                session.add(new_like)
+                session.commit()
+                return jsonify({'likes': post.likes_count})
+            else:
+                session.delete(like)
+                post.likes_count -= 1
+                session.commit()
+                return jsonify({'likes': post.likes_count})
+
 
 @login_required
 def delete_post(user, post_id):
     post = session.query(Post).filter_by(id=int(post_id)).first()
+    if post.user_uuid != user.uuid:
+        return redirect(url_for('user.me'))
     session.delete(post)
     session.commit()
     return redirect(url_for('user.me'))
