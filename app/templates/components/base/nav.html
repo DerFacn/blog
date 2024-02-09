@@ -1,0 +1,60 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+
+    <div class="navbar-brand">
+        <a class="navbar-item is-size-3" href="/">
+            <h2>🥝 Kiwi</h2>
+        </a>
+        <div class="navbar-item">
+            <div class="control">
+                <form action="/search" style="padding: 0">
+                    <input type="hidden" name="filters" value="{{ request.args.get('filters', '') }}">
+                    <input type="text" name="q" id="s" class="input" placeholder="Search" value="{{ request.args.get('q', '') }}">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <div class="buttons">
+                {% if not g.user %}
+
+                    <a class="navbar-item button is-primary" href="{{ url_for('user.auth.signup') }}">
+                        <strong>Sign up</strong>
+                    </a>
+                    <a class="navbar-item button is-light" href="{{ url_for('user.auth.login') }}">
+                        Log in
+                    </a>
+
+                {% else %}
+
+                    <a class="button is-light is-success navbar-item" href="{{ url_for('posts.create_post') }}">New post</a>
+
+                    <div class="navbar-item dropdown">
+                        <div class="dropdown-trigger">
+                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                                <span>{{ g.user.username }}</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down"
+                                    aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                            <div class="dropdown-content">
+                                <a href="{{ url_for('user.me') }}" class="dropdown-item">Profile</a>
+                                <hr class="dropdown-divider" />
+                                <form id="logoutForm" method="post" action="{{ url_for('user.auth.logout') }}" class="navbar-item" style="padding: 0">
+                                    <a href="#" class="dropdown-item has-text-danger is-light" onclick="logout()">
+                                        Logout
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

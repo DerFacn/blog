@@ -1,0 +1,7 @@
+{% macro posts_render(posts_list) %}
+    {% from 'components/post/post.html' import post_ %}
+    {% for post_obj in posts_list %}
+        {{ post_(post_obj) }}
+    {% endfor %}
+
+{% endmacro %}

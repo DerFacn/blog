@@ -4,8 +4,8 @@
     <section class="section">
         <div class="container">
             {% if posts %}
-                {% from 'components/post.html' import render_posts %}
-                {{ render_posts(posts) }}
+                {% from 'components/post/posts.html' import posts_render %}
+                {{ posts_render(posts) }}
             {% else %}
                 <p class="has-text-centered has-text-grey">No posts available.</p>
             {% endif %}

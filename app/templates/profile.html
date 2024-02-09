@@ -15,8 +15,8 @@
                 <h1 class="title is-size-3">{{ user.username }}'s posts</h1>
                 {% set posts = user.posts %}
                 {% if posts %}
-                    {% from 'components/post.html' import render_posts %}
-                    {{ render_posts(posts) }}
+                    {% from 'components/post/posts.html' import posts_render %}
+                    {{ posts_render(posts) }}
                 {% else %}
                 <h1 class="title is-size-5 has-text-grey is-unselectable">{{ user.username }} hasn't written anything yet</h1>
                 {% endif %}

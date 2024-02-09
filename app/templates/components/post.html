@@ -23,18 +23,5 @@
     {% endfor %}
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        function likePost(likeIcon) {
-            var postId = likeIcon.dataset.postId;
-            var likesCountElement = document.getElementById('likesCount_' + postId);
-
-            axios.post('{{ url_for("posts.like_post") }}', { post_id: postId })
-                .then(function (response) {
-                    likesCountElement.innerHTML = response.data.likes;
-                })
-                .catch(function (error) {
-                    console.error('Помилка при відправці запиту на лайк: ', error);
-                });
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/post.js') }}"></script>
 {% endmacro %}
