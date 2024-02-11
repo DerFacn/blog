@@ -14,6 +14,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(200), unique=True)
     password: Mapped[str]
 
+    avatar: Mapped[str] = mapped_column(nullable=True)
+
     posts: Mapped[List['Post']] = relationship(back_populates='user', cascade='all, delete-orphan')
 
     is_active: Mapped[bool] = mapped_column(default=False)

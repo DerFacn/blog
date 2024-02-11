@@ -5,8 +5,12 @@
     <div class="container">
         <div class="columns">
             <div class="column is-one-quarter is-flex is-flex-direction-column">
-                <figure class="image is-128x128 mb-2">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt="example">
+                <figure class="image is-128x128 mb-2 is-unselectable" style="pointer-events: none; user-select: none">
+                    {% if user.avatar %}
+                        <img class="is-rounded" src="{{ url_for('static', filename='avatars/'+user.avatar) }}" alt="{{ user.username }}'s avatar">
+                    {% else %}
+                        <img class="is-rounded" src="{{ url_for('static', filename='avatars/empty_icon.png') }}" alt="No icon">
+                    {% endif %}
                 </figure>
                 <strong class="title">{{ user.username }}</strong>
                 <p class="is-size-5">Created at: {{ user.created.strftime('%Y-%m-%d') }}</p>

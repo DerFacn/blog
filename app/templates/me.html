@@ -5,9 +5,20 @@
     <div class="container">
         <div class="columns">
             <div class="column is-one-quarter is-flex is-flex-direction-column">
-                <figure class="image is-128x128 mb-2">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt="example">
-                </figure>
+                <form method="post" id="avatarForm" style="padding: 0" enctype="multipart/form-data">
+                    <label for="avatarInput" style="cursor: pointer; display: inline-block;">
+                        <figure class="image is-128x128 mb-2">
+                            {% if user.avatar %}
+                                <img class="is-rounded" src="{{ url_for('static', filename='avatars/'+user.avatar) }}" alt="Avatar">
+                            {% else %}
+                                <img class="is-rounded" src="{{ url_for('static', filename='avatars/avatar.png') }}" alt="example">
+                            {% endif %}
+                        </figure>
+                    </label>
+                    <input type="file" id="avatarInput" name="avatar" style="display: none;"
+                           accept="image/png, image/jpg, image/jpeg" onchange="document.getElementById('avatarForm').submit()">
+                </form>
+
                 <strong class="title">{{ user.username }}</strong>
                 <p class="is-size-5" id="email-status">
                     Email:

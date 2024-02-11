@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from os import environ
+import os
 
 load_dotenv()
 
@@ -11,6 +12,7 @@ class Config:
     DATABASE_URI = environ.get('DATABASE_URI') or 'sqlite:///app.db'
     JWT_SECRET_KEY = environ.get('JWT_SECRET_KEY') or 'very_strong_jwt_secret_key'
     SERIALIZER_SECRET_KEY = environ.get('SERIALIZER_SECRET_KEY') or 'secret_key_for_verification_function'
+    UPLOAD_FOLDER = environ.get('UPLOAD_FOLDER') or './app/static/avatars/'
     # Mail
     MAIL_SERVER = environ.get('MAIL_SERVER') or 'smtp.gmail.com'
     MAIL_PORT = environ.get('MAIL_PORT') or '465'
