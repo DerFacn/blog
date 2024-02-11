@@ -8,7 +8,7 @@
             <div class="control">
                 <form action="/search" style="padding: 0">
                     <input type="hidden" name="filters" value="{{ request.args.get('filters', '') }}">
-                    <input type="text" name="q" id="s" class="input" placeholder="Search" value="{{ request.args.get('q', '') }}">
+                    <input type="text" name="q" id="s" class="input" placeholder="Search" value="{{ request.args.get('q', '') }}" required>
                 </form>
             </div>
         </div>

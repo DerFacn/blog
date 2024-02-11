@@ -6,6 +6,7 @@ from app.db import session
 from .verification import send_message, verify
 from app.utils import login_required
 from uuid import uuid4
+from datetime import datetime, timedelta
 
 
 def signup():
@@ -42,7 +43,8 @@ def signup():
 
             response = make_response(redirect(url_for('main.index')))
             access_token = create_token(new_user.uuid)
-            response.set_cookie('access_token', access_token, path='/')
+            response.set_cookie('access_token', access_token, path='/', expires=datetime.now()+timedelta(weeks=12),
+                                secure=True, httponly=True, samesite='Strict')
 
             if not send_message(email, new_user.uuid):
                 return '<h1">Something wrong! Please, write about this problem to admin!</h1>'
@@ -79,7 +81,8 @@ def login():
                 response = make_response(redirect(url_for('main.index')))
 
             access_token = create_token(user.uuid)
-            response.set_cookie('access_token', access_token, path='/')
+            response.set_cookie('access_token', access_token, path='/', expires=datetime.now()+timedelta(weeks=12),
+                                secure=True, httponly=True, samesite='Strict')
 
             return response
     return render_template('auth/login.html', title='Login', form=form)

@@ -3,9 +3,24 @@
 {% block content %}
 <section class="section">
     <div class="container">
-        {% from 'components/post/post.html' import post_ %}
-        {{ post_(post) }}
+        <p class="title"><a href="{{ url_for('user.user_profile', username=post.user.username) }}">{{ post.user.username }}</a>
+            <span class="is-size-6 has-text-grey"> at {{ post.created_at.strftime('%Y-%m-%d %H:%m') }}</span></p>
+        <div class="box">
+            <h1 class="title">{{ post.title }}</h1>
+            <p class="content">{{ (post.body).replace('\n', '<br>')|safe }}</p>
+
+            <span class="is-unselectable">
+                <span class="icon is-small like-icon" data-post-id="{{ post.id }}" onclick="likePost(this)" style="cursor: pointer">
+                    <i class="far fa-thumbs-up" aria-hidden="true"></i>
+                </span>
+                <span id="likesCount_{{ post.id }}">{{ post.likes_count }}</span>
+            </span>
+
+
+        </div>
         <a href="{{ url_for('main.index') }}" class="button is-info is-light">Back to main page</a>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{{ url_for('static', filename='js/post.js') }}"></script>
 {% endblock %}
