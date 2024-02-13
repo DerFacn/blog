@@ -3,6 +3,7 @@ from .forms import PostForm
 from app.models import Post, Like
 from app.db import session
 from app.utils import login_required
+from markupsafe import Markup
 
 
 @login_required
@@ -16,7 +17,8 @@ def create_post(user):
         if form.validate_on_submit():
             title = request.form.get('title')
             body = request.form.get('body')
-            new_post = Post(title=title, body=body, user_uuid=user.uuid)
+            cleaned = Markup.escape(body)
+            new_post = Post(title=title, body=cleaned, user_uuid=user.uuid)
             session.add(new_post)
             session.commit()
             return redirect(url_for('posts.view_post', post_id=new_post.id))

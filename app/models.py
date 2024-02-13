@@ -35,7 +35,7 @@ class Post(Base):
     user: Mapped['User'] = relationship(back_populates='posts')
 
     likes_count: Mapped[int] = mapped_column(default=0)
-    likes: Mapped[List['Like']] = relationship(back_populates='post')
+    likes: Mapped[List['Like']] = relationship(back_populates='post', cascade='all, delete-orphan')
 
     created_at: Mapped[str] = mapped_column(DateTime(), default=datetime.now())
 
