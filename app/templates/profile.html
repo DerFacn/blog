@@ -17,7 +17,7 @@
             </div>
             <div class="column is-four-fifths">
                 <h1 class="title is-size-3">{{ user.username }}'s posts</h1>
-                {% set posts = user.posts %}
+                {% set posts = user.posts[::-1] %}
                 {% if posts %}
                     {% from 'components/post/posts.html' import posts_render %}
                     {{ posts_render(posts) }}

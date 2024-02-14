@@ -3,7 +3,7 @@ from .forms import PostForm
 from app.models import Post, Like
 from app.db import session
 from app.utils import login_required
-from markupsafe import Markup
+from .utils import order, disorder
 
 
 @login_required
@@ -17,7 +17,7 @@ def create_post(user):
         if form.validate_on_submit():
             title = request.form.get('title')
             body = request.form.get('body')
-            cleaned = Markup.escape(body)
+            cleaned = order(body)
             new_post = Post(title=title, body=cleaned, user_uuid=user.uuid)
             session.add(new_post)
             session.commit()
@@ -32,7 +32,7 @@ def edit_post(user, post_id):
         abort(404)
     elif post.user_uuid != user.uuid:
         abort(403)
-    form = PostForm(title=post.title, body=post.body)
+    form = PostForm(title=post.title, body=disorder(post.body))
     if request.method == 'POST':
         if form.validate_on_submit():
             title = request.form.get('title')

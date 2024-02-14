@@ -25,7 +25,15 @@
                 {% for post in results %}
                     <div class="box">
                         <h2 class="title"><a href="{{ url_for('posts.view_post', post_id=post.id) }}">{{ post.title }}</a></h2>
-                        <p class="content">{{ post.body }}</p>
+                        <p class="content">
+                            {% set max_words = 90 %}
+                            {% set words = post.body.split(' ') %}
+                            {% set truncated_body = ' '.join(words[:max_words]) %}
+                            {{ (truncated_body).replace('\n', '<br>')|safe }}
+                            {% if words|length > max_words %}
+                            ...<br><br><a class="button is-link is-light" href="{{ url_for('posts.view_post', post_id=post.id) }}">View the full post</a>
+                            {% endif %}
+                        </p>
                     </div>
                 {% endfor %}
             {% else %}
