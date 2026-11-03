@@ -1,3 +1,4 @@
+import html
 from flask import request, render_template, redirect, url_for, abort, flash, jsonify
 from .forms import PostForm
 from app.models import Post, Like
@@ -32,13 +33,13 @@ def edit_post(user, post_id):
         abort(404)
     elif post.user_uuid != user.uuid:
         abort(403)
-    form = PostForm(title=post.title, body=disorder(post.body))
+    form = PostForm(title=post.title, body=html.unescape(disorder(post.body)))
     if request.method == 'POST':
         if form.validate_on_submit():
             title = request.form.get('title')
             body = request.form.get('body')
             post.title = title
-            post.body = body
+            post.body = order(body)
             session.commit()
             return redirect(url_for('posts.view_post', post_id=post.id))
     return render_template('posts/create.html', title='Edit post', form=form)
